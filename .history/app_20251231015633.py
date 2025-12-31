@@ -26,7 +26,7 @@ def activeWindow():
         else:
             raise
 
-time_tracking = defaultdict(float)
+time_tracking = [{'Application Path': '', 'Time': ''}]
 
 def print_time_tracking(time_tracking):
     print("End of Day Time Tracking:")
