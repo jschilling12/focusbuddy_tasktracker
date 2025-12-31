@@ -1,11 +1,11 @@
 from collections import defaultdict
-import msvcrt
 import time
 import win32api
 import win32con
 import win32process
 import win32gui
 
+time_tracking = defaultdict(float)
 
 
 def activeWindow():
@@ -24,30 +24,19 @@ def activeWindow():
         else:
             raise
 
-time_tracking = defaultdict(float)
+
+process = activeWindow()
+start = time.localtime()
+exit_loop = False
 
 # Main loop for the processes to count the number of seconds
+def time_tracking():
 
-def print_time_tracking(time_tracking):
-    print("End of Day Time Tracking:")
-    for key, value in time_tracking.items():
-        t = time.gmtime(value)
-        values = time.strftime("%H:%M:%S", t)
-        print("{} ({})".format(key, values))
+    while True:
+        time.sleep(3600)
 
-# def save_time_tracking(time_tracking):
-
-# def changing_names(time_tracking):
-
-def timed_process():
-    process = activeWindow()
-    start = time.time()
-    running = True
-
-    while running:
-        time.sleep(1)
         new_process = activeWindow()
-        
+
         if new_process != process:
             end = time.time()
             total = end - start
@@ -55,23 +44,14 @@ def timed_process():
             process = activeWindow()
             start = time.time()
 
-        if msvcrt.kbhit():
-            user_input = input().strip().lower()
-            if user_input == "exit":
-                end = time.time()
-                total = end - start
-                time_tracking[process] += total
-                running = False
-                pass
-
         elif new_process is None:
             end = time.time()
             total = end - start
             time_tracking[process] += total
             process = activeWindow()
             start = time.time()
-    return print_time_tracking(time_tracking)
 
 
-if __name__ == "__main__":
-    print(timed_process())
+end = time.localtime()
+
+time_tracking()

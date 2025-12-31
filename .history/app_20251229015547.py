@@ -1,5 +1,4 @@
 from collections import defaultdict
-import msvcrt
 import time
 import win32api
 import win32con
@@ -27,42 +26,21 @@ def activeWindow():
 time_tracking = defaultdict(float)
 
 # Main loop for the processes to count the number of seconds
-
-def print_time_tracking(time_tracking):
-    print("End of Day Time Tracking:")
-    for key, value in time_tracking.items():
-        t = time.gmtime(value)
-        values = time.strftime("%H:%M:%S", t)
-        print("{} ({})".format(key, values))
-
-# def save_time_tracking(time_tracking):
-
-# def changing_names(time_tracking):
-
 def timed_process():
-    process = activeWindow()
-    start = time.time()
-    running = True
-
-    while running:
+    while True:
         time.sleep(1)
+
+        process = activeWindow()
+        start = time.time()
         new_process = activeWindow()
-        
+
         if new_process != process:
             end = time.time()
             total = end - start
             time_tracking[process] += total
             process = activeWindow()
             start = time.time()
-
-        if msvcrt.kbhit():
-            user_input = input().strip().lower()
-            if user_input == "exit":
-                end = time.time()
-                total = end - start
-                time_tracking[process] += total
-                running = False
-                pass
+            print(time_tracking)
 
         elif new_process is None:
             end = time.time()
@@ -70,8 +48,8 @@ def timed_process():
             time_tracking[process] += total
             process = activeWindow()
             start = time.time()
-    return print_time_tracking(time_tracking)
 
 
 if __name__ == "__main__":
-    print(timed_process())
+    timed_process()
+    print(time_tracking)

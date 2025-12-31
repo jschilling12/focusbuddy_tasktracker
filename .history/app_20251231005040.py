@@ -74,4 +74,4 @@ def timed_process():
 
 
 if __name__ == "__main__":
-    print(timed_process())
+    timed_process()

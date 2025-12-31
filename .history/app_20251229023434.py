@@ -35,7 +35,7 @@ def print_time_tracking(time_tracking):
         values = time.strftime("%H:%M:%S", t)
         print("{} ({})".format(key, values))
 
-# def save_time_tracking(time_tracking):
+def save_time_tracking(time_tracking):
 
 # def changing_names(time_tracking):
 
@@ -61,6 +61,7 @@ def timed_process():
                 end = time.time()
                 total = end - start
                 time_tracking[process] += total
+                print_time_tracking(time_tracking)
                 running = False
                 pass
 
@@ -70,8 +71,7 @@ def timed_process():
             time_tracking[process] += total
             process = activeWindow()
             start = time.time()
-    return print_time_tracking(time_tracking)
 
 
 if __name__ == "__main__":
-    print(timed_process())
+    timed_process()

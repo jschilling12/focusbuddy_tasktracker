@@ -26,18 +26,18 @@ def activeWindow():
 
 time_tracking = defaultdict(float)
 
-# Main loop for the processes to count the number of seconds
+# def changing_names(time_tracking):
 
 def print_time_tracking(time_tracking):
     print("End of Day Time Tracking:")
     for key, value in time_tracking.items():
-        t = time.gmtime(value)
-        values = time.strftime("%H:%M:%S", t)
-        print("{} ({})".format(key, values))
+        print("{} ({})".format(key, value))
 
-# def save_time_tracking(time_tracking):
+def total_calc(end, start):
+    elapsed_seconds = end - start
+    total = time.localtime(elapsed_seconds)
+    return total
 
-# def changing_names(time_tracking):
 
 def timed_process():
     process = activeWindow()
@@ -50,7 +50,7 @@ def timed_process():
         
         if new_process != process:
             end = time.time()
-            total = end - start
+            total = total_calc(end, start)
             time_tracking[process] += total
             process = activeWindow()
             start = time.time()
@@ -59,19 +59,19 @@ def timed_process():
             user_input = input().strip().lower()
             if user_input == "exit":
                 end = time.time()
-                total = end - start
-                time_tracking[process] += total
+                total = total_calc(end, start)
+                time_tracking[process] += 
+                print_time_tracking(time_tracking)
                 running = False
                 pass
 
         elif new_process is None:
             end = time.time()
-            total = end - start
+            total = total_calc(end, start)
             time_tracking[process] += total
             process = activeWindow()
             start = time.time()
-    return print_time_tracking(time_tracking)
 
 
 if __name__ == "__main__":
-    print(timed_process())
+    timed_process()
