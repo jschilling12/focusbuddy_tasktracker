@@ -28,6 +28,10 @@ def activeWindow():
         else:
             raise
 
+
+time_tracking = defaultdict(float)
+
+
 class saveFiles:
     def save_folder():
         # Prompt a file dialog for directory selection.
@@ -37,7 +41,7 @@ class saveFiles:
         # Save the selected directory path for future use.
         # Check on subsequent launches if a path is already saved.
 
-    def save_time_tracking(self, txt, time_tracking):
+    def save_time_tracking(txt, time_tracking):
 
         fields = ['Run Time', 'Application Path', 'Time']
         today = str(datetime.date.today())
@@ -64,10 +68,7 @@ class saveFiles:
         return True
 
 class timeTracker:
-    def __init__(self):
-        self.time_tracking = defaultdict(float)
-
-    def print_time_tracking(self, time_tracking):
+    def print_time_tracking(time_tracking):
         print("End of Day Time Tracking:")
         for key, value in time_tracking.items():
             t = time.gmtime(value)
@@ -76,7 +77,7 @@ class timeTracker:
 
     # def changing_names(time_tracking):
 
-    def timed_process(self):
+    def timed_process():
         process = activeWindow()
         start = time.time()
         running = True
@@ -88,7 +89,7 @@ class timeTracker:
             if new_process != process:
                 end = time.time()
                 total = end - start
-                self.time_tracking[process] += total
+                time_tracking[process] += total
                 process = activeWindow()
                 start = time.time()
 
@@ -97,16 +98,16 @@ class timeTracker:
                 if user_input == "exit":
                     end = time.time()
                     total = end - start
-                    self.time_tracking[process] += total
+                    time_tracking[process] += total
                     running = False
 
             elif new_process is None:
                 end = time.time()
                 total = end - start
-                self.time_tracking[process] += total
+                time_tracking[process] += total
                 process = activeWindow()
                 start = time.time()
-        return saves.save_time_tracking(txt, self.time_tracking)
+        return saves.save_time_tracking(txt, time_tracking)
 
 
 if __name__ == "__main__":

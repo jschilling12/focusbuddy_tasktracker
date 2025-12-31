@@ -112,7 +112,6 @@ class timeTracker:
 if __name__ == "__main__":
     tracker = timeTracker()
     saves = saveFiles()
-
     file_path = 'empty.txt'
     txt = Path('empty.txt').read_text()
     if txt == '':

@@ -29,7 +29,7 @@ def activeWindow():
             raise
 
 class saveFiles:
-    def save_folder():
+    def save_folder( ):
         # Prompt a file dialog for directory selection.
         PathFileName = str(Path(tkinter.filedialog.askdirectory(mustexist=True, title="Select Directory to Save Time Tracking CSV")))
         with open(file_path, 'w') as f:
@@ -112,7 +112,6 @@ class timeTracker:
 if __name__ == "__main__":
     tracker = timeTracker()
     saves = saveFiles()
-
     file_path = 'empty.txt'
     txt = Path('empty.txt').read_text()
     if txt == '':

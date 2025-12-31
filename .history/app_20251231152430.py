@@ -37,6 +37,13 @@ class saveFiles:
         # Save the selected directory path for future use.
         # Check on subsequent launches if a path is already saved.
 
+    def createFolder(directory):
+        try:
+            if not os.path.exists(directory):
+                os.makedirs(directory)
+        except OSError:
+            print ("Creation of the directory %s failed" % directory)
+
     def save_time_tracking(self, txt, time_tracking):
 
         fields = ['Run Time', 'Application Path', 'Time']
@@ -112,10 +119,8 @@ class timeTracker:
 if __name__ == "__main__":
     tracker = timeTracker()
     saves = saveFiles()
-
-    file_path = 'empty.txt'
     txt = Path('empty.txt').read_text()
-    if txt == '':
+    if txt is None:
         saves.save_folder()
     timed_process = tracker.timed_process()
     print(timed_process)

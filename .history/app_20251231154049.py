@@ -28,8 +28,13 @@ def activeWindow():
         else:
             raise
 
+class defaultDict:
+    def __init__(self):
+        self.time_tracking = defaultdict(float)
+
+
 class saveFiles:
-    def save_folder():
+    def save_folder(self):
         # Prompt a file dialog for directory selection.
         PathFileName = str(Path(tkinter.filedialog.askdirectory(mustexist=True, title="Select Directory to Save Time Tracking CSV")))
         with open(file_path, 'w') as f:
@@ -64,9 +69,6 @@ class saveFiles:
         return True
 
 class timeTracker:
-    def __init__(self):
-        self.time_tracking = defaultdict(float)
-
     def print_time_tracking(self, time_tracking):
         print("End of Day Time Tracking:")
         for key, value in time_tracking.items():
@@ -88,7 +90,7 @@ class timeTracker:
             if new_process != process:
                 end = time.time()
                 total = end - start
-                self.time_tracking[process] += total
+                time_tracking[process] += total
                 process = activeWindow()
                 start = time.time()
 
@@ -97,22 +99,23 @@ class timeTracker:
                 if user_input == "exit":
                     end = time.time()
                     total = end - start
-                    self.time_tracking[process] += total
+                    time_tracking[process] += total
                     running = False
 
             elif new_process is None:
                 end = time.time()
                 total = end - start
-                self.time_tracking[process] += total
+                time_tracking[process] += total
                 process = activeWindow()
                 start = time.time()
-        return saves.save_time_tracking(txt, self.time_tracking)
+        return saves.save_time_tracking(txt, time_tracking)
 
 
 if __name__ == "__main__":
     tracker = timeTracker()
     saves = saveFiles()
-
+    time_tracking = defaultDict()
+    
     file_path = 'empty.txt'
     txt = Path('empty.txt').read_text()
     if txt == '':

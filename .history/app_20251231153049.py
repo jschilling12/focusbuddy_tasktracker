@@ -106,16 +106,14 @@ class timeTracker:
                 self.time_tracking[process] += total
                 process = activeWindow()
                 start = time.time()
-        return saves.save_time_tracking(txt, self.time_tracking)
+        return saves.save_time_tracking(file_path, self.time_tracking)
 
 
 if __name__ == "__main__":
     tracker = timeTracker()
     saves = saveFiles()
-
-    file_path = 'empty.txt'
-    txt = Path('empty.txt').read_text()
-    if txt == '':
-        saves.save_folder()
+    file_path = Path('empty.txt').read_text()
+    if file_path == '':
+        saves.save_folder(self)
     timed_process = tracker.timed_process()
     print(timed_process)
