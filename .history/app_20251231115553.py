@@ -2,9 +2,7 @@ from collections import defaultdict
 import csv
 import datetime
 import msvcrt
-from pathlib import Path
 import time
-import tkinter.filedialog
 import win32api
 import win32con
 import win32process
@@ -50,7 +48,7 @@ class timeTracker:
             values = time.strftime("%H:%M:%S", t)
             rows.append([today, key, values])   
         '''
-        
+
         with open(filename, 'w') as csvfile:
             fields = ['Run Time', 'Application Path', 'Time']
             csvwriter = csv.DictWriter(csvfile, fieldnames=fields)
@@ -100,6 +98,5 @@ class timeTracker:
 
 if __name__ == "__main__":
     tracker = timeTracker()
-    PathFileName = Path(tkinter.filedialog.askdirectory(mustexist=True, title="Select Directory to Save Time Tracking CSV"))
     timed_process = tracker.timed_process()
     print(timed_process)
