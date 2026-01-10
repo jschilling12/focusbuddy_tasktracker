@@ -19,15 +19,9 @@ def job():
 def activeWindow():
     try:
         window = win32gui.GetForegroundWindow()
-        if not window:
-            return NOne
         _, pid = win32process.GetWindowThreadProcessId(window)
-        if not pid or pid == 0:
-            return None
         # Request only PROCESS_QUERY_LIMITED_INFORMATION
-        handle = win32api.OpenProcess(win32con.PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
-        if not handle:
-            return None
+        handle = win32api.GetCurrentProcess()
         # ... perform operations with the handle ...
         active_window_path = win32process.GetModuleFileNameEx(handle, 0)
         win32api.CloseHandle(handle)
@@ -37,9 +31,6 @@ def activeWindow():
             print(f"Access Denied: {e}")
         else:
             raise
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
 
 class saveFiles:
     def save_folder(self):
@@ -106,7 +97,16 @@ class timeTracker:
                 start = time.time()
 
             if new_process is None:
-                continue
+                end = time.time()
+                total = end - start
+                self.time_tracking[process] += total
+                process = activeWindow()
+                start = time.time()
+
+            # if new_process is not found:
+            #     calculate the time
+            #     reassign process
+            #     start time again
 
             if msvcrt.kbhit():
                 user_input = input().strip().lower()

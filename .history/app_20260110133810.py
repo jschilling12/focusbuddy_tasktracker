@@ -19,11 +19,7 @@ def job():
 def activeWindow():
     try:
         window = win32gui.GetForegroundWindow()
-        if not window:
-            return NOne
         _, pid = win32process.GetWindowThreadProcessId(window)
-        if not pid or pid == 0:
-            return None
         # Request only PROCESS_QUERY_LIMITED_INFORMATION
         handle = win32api.OpenProcess(win32con.PROCESS_QUERY_LIMITED_INFORMATION, False, pid)
         if not handle:
@@ -107,7 +103,7 @@ class timeTracker:
 
             if new_process is None:
                 continue
-
+            
             if msvcrt.kbhit():
                 user_input = input().strip().lower()
                 if user_input == "exit":
