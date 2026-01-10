@@ -14,7 +14,6 @@ import win32gui
 
 def job(): 
     running = False
-    return running
 
 def activeWindow():
     try:

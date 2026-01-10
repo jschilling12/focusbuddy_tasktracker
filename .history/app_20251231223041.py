@@ -3,7 +3,6 @@ import csv
 import datetime
 import msvcrt
 from pathlib import Path
-import schedule
 import time
 import tkinter.filedialog
 import os
@@ -12,9 +11,6 @@ import win32con
 import win32process
 import win32gui
 
-def job(): 
-    running = False
-    return running
 
 def activeWindow():
     try:
@@ -96,13 +92,6 @@ class timeTracker:
                 process = activeWindow()
                 start = time.time()
 
-            if new_process is None:
-                end = time.time()
-                total = end - start
-                self.time_tracking[process] += total
-                process = activeWindow()
-                start = time.time()
-
             if msvcrt.kbhit():
                 user_input = input().strip().lower()
                 if user_input == "exit":
@@ -110,7 +99,13 @@ class timeTracker:
                     total = end - start
                     self.time_tracking[process] += total
                     running = False
-            schedule.every().day.at("23:55").do(job)
+
+            elif new_process is None:
+                end = time.time()
+                total = end - start
+                self.time_tracking[process] += total
+                process = activeWindow()
+                start = time.time()
         return saves.save_time_tracking(txt, self.time_tracking)
 
 # t = Timer(30.0, hello)

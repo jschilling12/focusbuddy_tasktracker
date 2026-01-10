@@ -14,7 +14,6 @@ import win32gui
 
 def job(): 
     running = False
-    return running
 
 def activeWindow():
     try:
@@ -110,7 +109,7 @@ class timeTracker:
                     total = end - start
                     self.time_tracking[process] += total
                     running = False
-            schedule.every().day.at("23:55").do(job)
+            schedule.every().day.at("23:55").do(job())
         return saves.save_time_tracking(txt, self.time_tracking)
 
 # t = Timer(30.0, hello)
