@@ -1,0 +1,7 @@
+.history/
+archive/
+__pycache__/
+.venv/
+build/
+dist/
+*.spec
