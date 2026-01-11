@@ -1,9 +1,11 @@
 from collections import defaultdict
 import csv
 import datetime
+from logging import root
 import msvcrt
+from multiprocessing import process
 from pathlib import Path
-import schedule
+import threading
 import time
 import tkinter.filedialog
 import os
@@ -11,6 +13,10 @@ import win32api
 import win32con
 import win32process
 import win32gui
+from pomodoro_timer import PomodoroTimer
+
+CONFIG_PATH = Path(os.environ["APPDATA"]) / "pomodoro&tracker" / "empty.txt"
+CONFIG_PATH.parent.mkdir(parents=True, exist_ok=True)
 
 def job(): 
     running = False
@@ -20,7 +26,7 @@ def activeWindow():
     try:
         window = win32gui.GetForegroundWindow()
         if not window:
-            return NOne
+            return None
         _, pid = win32process.GetWindowThreadProcessId(window)
         if not pid or pid == 0:
             return None
@@ -42,11 +48,11 @@ def activeWindow():
         return None
 
 class saveFiles:
-    def save_folder(self):
+    def save_folder(self, config_path: Path):
         # Prompt a file dialog for directory selection.
         PathFileName = str(Path(tkinter.filedialog.askdirectory(mustexist=True, title="Select Directory to Save Time Tracking CSV")))
-        with open(file_path, 'w') as f:
-            f.write(PathFileName)
+        if PathFileName:
+            config_path.write_text(PathFileName)
         # Save the selected directory path for future use.
         # Check on subsequent launches if a path is already saved.
 
@@ -72,13 +78,17 @@ class saveFiles:
             for key, value in time_tracking.items():
                 t = time.gmtime(value)
                 values = time.strftime("%H:%M:%S", t)
-                csvwriter.writerow({'Application Path': {key}})
-                csvwriter.writerow({'Application Path': {values}})
+                csvwriter.writerow({
+                    "Run Time": today,
+                    "Application Path": key,
+                    "Time": values
+                })
         return True
 
 class timeTracker:
     def __init__(self):
         self.time_tracking = defaultdict(float)
+        self.running = True
 
     def print_time_tracking(self, time_tracking):
         print("End of Day Time Tracking:")
@@ -89,12 +99,14 @@ class timeTracker:
 
     # def changing_names(time_tracking):
 
+    def stop(self):
+        self.running = False
+
     def timed_process(self):
         process = activeWindow()
         start = time.time()
-        running = True
 
-        while running:
+        while self.running:
             time.sleep(1)
             new_process = activeWindow()
             
@@ -107,16 +119,16 @@ class timeTracker:
 
             if new_process is None:
                 continue
+        end = time.time()
+        total = end - start
+        if process:
+            self.time_tracking[process] += total
+    
+    def on_close():
+        tracker.stop()
+        saves.save_time_tracking(txt, tracker.time_tracking)
+        root.destroy()
 
-            if msvcrt.kbhit():
-                user_input = input().strip().lower()
-                if user_input == "exit":
-                    end = time.time()
-                    total = end - start
-                    self.time_tracking[process] += total
-                    running = False
-            schedule.every().day.at("23:55").do(job)
-        return saves.save_time_tracking(txt, self.time_tracking)
 
 # t = Timer(30.0, hello)
 
@@ -124,9 +136,25 @@ if __name__ == "__main__":
     tracker = timeTracker()
     saves = saveFiles()
 
-    file_path = 'empty.txt'
-    txt = Path('empty.txt').read_text()
-    if txt == '':
-        saves.save_folder()
-    timed_process = tracker.timed_process()
-    print(timed_process)
+    app = PomodoroTimer()  # creates root, but doesn't start mainloop yet
+
+    tracking_thread = threading.Thread(target=tracker.timed_process, daemon=True)
+    tracking_thread.start()
+
+    def on_close():
+        tracker.stop()
+        saves.save_time_tracking(txt, tracker.time_tracking)
+        app.root.destroy()
+
+    app.root.protocol("WM_DELETE_WINDOW", on_close)
+
+    if not CONFIG_PATH.exists():
+        CONFIG_PATH.write_text("")
+
+    txt = CONFIG_PATH.read_text().strip()
+
+    if txt == "":
+        saves.save_folder(CONFIG_PATH)
+        txt = CONFIG_PATH.read_text().strip()
+
+    app.run()
