@@ -1,7 +1,15 @@
-.history/
-archive/
+# Python
 __pycache__/
-.venv/
+*.pyc
+
+# PyInstaller
 build/
 dist/
 *.spec
+
+# App artifacts
+empty.txt
+
+# OS
+.DS_Store
+Thumbs.db
