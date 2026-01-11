@@ -81,7 +81,7 @@ class saveFiles:
                 csvwriter.writerow({
                     "Run Time": today,
                     "Application Path": key,
-                    "Time": time.strftime("%H:%M:%S", time.gmtime(value))
+                    "Time": values
                 })
         return True
 
